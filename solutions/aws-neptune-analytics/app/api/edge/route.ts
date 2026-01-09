@@ -62,6 +62,17 @@ function validateEdgeBody(body: any) {
   return null
 }
 
+/**
+ * Validate request type of the edge
+ */
+function validateEdgeType(edge_type: string) {
+  const ALLOWED_EDGE_TYPES = ['FOLLOWS', 'LIKES', 'KNOWS', 'OWNS']
+
+  if (!ALLOWED_EDGE_TYPES.includes(edge_type)) {
+    return NextResponse.json({ error: 'Invalid edge type' }, { status: 400 })
+  }
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
@@ -89,6 +100,9 @@ export async function POST(request: Request) {
     if (error) return error
 
     const { fromId, toId, type, ...properties } = body
+
+    const type_error = validateEdgeType(type)
+    if (type_error) return type_error
 
     const result = await executeQuery(
       'MATCH (from), (to) WHERE id(from) = $FROM_ID AND id(to) = $TO_ID CREATE (from)-[r:' +

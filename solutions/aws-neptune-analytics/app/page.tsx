@@ -39,7 +39,7 @@ export default function Home() {
       const response = await fetch('/api/node', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: createNodeName, type: createNodeType })
+        body: JSON.stringify({ name: createNodeName, type: createNodeType }),
       })
       const data = await response.json()
       setNodeResult(JSON.stringify(data, null, 2))
@@ -54,7 +54,11 @@ export default function Home() {
       const response = await fetch('/api/node', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: updateNodeId, name: updateNodeName, type: updateNodeType })
+        body: JSON.stringify({
+          id: updateNodeId,
+          name: updateNodeName,
+          type: updateNodeType,
+        }),
       })
       const data = await response.json()
       setNodeResult(JSON.stringify(data, null, 2))
@@ -66,7 +70,9 @@ export default function Home() {
   const deleteNode = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await fetch(`/api/node?id=${deleteNodeId}`, { method: 'DELETE' })
+      const response = await fetch(`/api/node?id=${deleteNodeId}`, {
+        method: 'DELETE',
+      })
       const data = await response.json()
       setNodeResult(JSON.stringify(data, null, 2))
     } catch (error) {
@@ -91,7 +97,11 @@ export default function Home() {
       const response = await fetch('/api/edge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fromId: createEdgeSourceId, toId: createEdgeTargetId, type: createEdgeType })
+        body: JSON.stringify({
+          fromId: createEdgeSourceId,
+          toId: createEdgeTargetId,
+          type: createEdgeType,
+        }),
       })
       const data = await response.json()
       setEdgeResult(JSON.stringify(data, null, 2))
@@ -106,7 +116,12 @@ export default function Home() {
       const response = await fetch('/api/edge', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: updateEdgeId, fromId: updateEdgeSourceId, toId: updateEdgeTargetId, type: updateEdgeType })
+        body: JSON.stringify({
+          id: updateEdgeId,
+          fromId: updateEdgeSourceId,
+          toId: updateEdgeTargetId,
+          type: updateEdgeType,
+        }),
       })
       const data = await response.json()
       setEdgeResult(JSON.stringify(data, null, 2))
@@ -118,7 +133,9 @@ export default function Home() {
   const deleteEdge = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await fetch(`/api/edge?id=${deleteEdgeId}`, { method: 'DELETE' })
+      const response = await fetch(`/api/edge?id=${deleteEdgeId}`, {
+        method: 'DELETE',
+      })
       const data = await response.json()
       setEdgeResult(JSON.stringify(data, null, 2))
     } catch (error) {
@@ -129,7 +146,7 @@ export default function Home() {
   return (
     <div style={{ padding: '20px' }}>
       <h1>Neptune Analytics Graph Query</h1>
-      
+
       <form onSubmit={fetchNode} style={{ marginBottom: '30px' }}>
         <h2>Get Node</h2>
         <input
@@ -199,7 +216,9 @@ export default function Home() {
         <button type="submit">Delete Node</button>
       </form>
 
-      <pre style={{ background: '#f5f5f5', padding: '10px', marginBottom: '30px' }}>
+      <pre
+        style={{ background: '#f5f5f5', padding: '10px', marginBottom: '30px' }}
+      >
         {nodeResult}
       </pre>
 
@@ -231,13 +250,20 @@ export default function Home() {
           placeholder="Target node ID"
           required
         />
-        <input
-          type="text"
+        <select
           value={createEdgeType}
           onChange={(e) => setCreateEdgeType(e.target.value)}
-          placeholder="Relationship type"
           required
-        />
+        >
+          <option value="" disabled>
+            Select edge type
+          </option>
+          <option value="FOLLOWS">Follows</option>
+          <option value="LIKES">Likes</option>
+          <option value="KNOWS">Knows</option>
+          <option value="OWNS">Owns</option>
+        </select>
+
         <button type="submit">Create Edge</button>
       </form>
 
@@ -264,13 +290,20 @@ export default function Home() {
           placeholder="Target node ID"
           required
         />
-        <input
-          type="text"
+        <select
           value={updateEdgeType}
           onChange={(e) => setUpdateEdgeType(e.target.value)}
-          placeholder="Relationship type"
           required
-        />
+        >
+          <option value="" disabled>
+            Select edge type
+          </option>
+          <option value="FOLLOWS">Follows</option>
+          <option value="LIKES">Likes</option>
+          <option value="KNOWS">Knows</option>
+          <option value="OWNS">Owns</option>
+        </select>
+
         <button type="submit">Update Edge</button>
       </form>
 
@@ -286,9 +319,7 @@ export default function Home() {
         <button type="submit">Delete Edge</button>
       </form>
 
-      <pre style={{ background: '#f5f5f5', padding: '10px' }}>
-        {edgeResult}
-      </pre>
+      <pre style={{ background: '#f5f5f5', padding: '10px' }}>{edgeResult}</pre>
     </div>
   )
 }
